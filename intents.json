@@ -1,0 +1,126 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hey", "Hello", "Good morning", "Good evening", "Yo", "What's up?", "Howdy"],
+      "responses": ["Hey there! 😊", "Hello! How can I help you today?", "Hi! Ask me anything."]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye", "Catch you later", "Talk to you soon"],
+      "responses": ["Take care! 👋", "Goodbye! It was great talking to you.", "See you next time!"]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "Appreciate it", "Much appreciated", "Thanks a lot"],
+      "responses": ["You're welcome! 😊", "Glad I could help!", "Anytime! 🙌"]
+    },
+    {
+      "tag": "name",
+      "patterns": ["What's your name?", "Who are you?", "Tell me your name", "Do you have a name?"],
+      "responses": ["I'm your AI assistant—here to help!", "You can call me ChatBot, or just 'Bot' 😊"]
+    },
+    {
+      "tag": "joke",
+      "patterns": ["Tell me a joke", "Make me laugh", "Say something funny", "Do you know a joke?", "Any jokes?", "Funny joke?"],
+      "responses": [
+        "Why don’t scientists trust atoms? Because they make up everything! 😄",
+        "Why did the math book look sad? Because it had too many problems!",
+        "I told my computer I needed a break, and now it won’t stop sending me coffee ads."
+      ]
+    },
+    {
+      "tag": "advice",
+      "patterns": ["Give me advice", "I need advice", "Can you help me?", "What should I do?"],
+      "responses": [
+        "Trust yourself. You’ve survived 100% of your worst days so far. 😊",
+        "Take a deep breath, think clearly, and move forward one step at a time.",
+        "Sometimes doing your best is enough. Don’t be too hard on yourself."
+      ]
+    },
+    {
+      "tag": "funfact",
+      "patterns": ["Tell me a fun fact", "Give me a fact", "Interesting fact?", "Random fact please"],
+      "responses": [
+        "Did you know honey never spoils? Archaeologists found 3,000-year-old honey in Egypt—and it was still edible!",
+        "Octopuses have three hearts. 🐙",
+        "Bananas are berries, but strawberries aren’t!"
+      ]
+    },
+    {
+      "tag": "philosophy",
+      "patterns": ["What is the meaning of life?", "Why are we here?", "Tell me something deep"],
+      "responses": [
+        "The meaning of life is what you make of it—connection, growth, love, and purpose. 💫",
+        "To live, to learn, to love, and to leave a mark. ✨",
+        "Sometimes the journey is more important than the destination."
+      ]
+    },
+    {
+      "tag": "time",
+      "patterns": ["What time is it?", "Tell me the time", "Current time?", "Time now?"],
+      "responses": [
+        "Time is an illusion... but check your device clock for the most accurate reading! 😄",
+        "I'm timeless, but your device knows the current time!"
+      ]
+    },
+    {
+      "tag": "weather",
+      "patterns": ["What's the weather like?", "Is it raining?", "How's the weather today?", "Weather update?"],
+      "responses": [
+        "I can't fetch live weather yet 🌦️, but you can check your favorite weather app!",
+        "Imagine your perfect weather… now step into it. 😊"
+      ]
+    },
+    {
+      "tag": "emotion_support",
+      "patterns": ["I'm sad", "Feeling down", "I'm anxious", "I'm happy", "I'm excited"],
+      "responses": [
+        "I'm here with you. You're not alone. 💛",
+        "That's amazing to hear! Keep that positive energy flowing!",
+        "It’s okay to feel that way. Want to talk more about it?",
+        "I believe in you. Things will get better!"
+      ]
+    },
+    {
+      "tag": "self_improvement",
+      "patterns": ["How can I be more productive?", "Any tips for self-growth?", "I want to improve myself"],
+      "responses": [
+        "Start small. Set clear goals. Be consistent. 🌱",
+        "Growth takes time, but every step counts. Keep going!",
+        "A journal, healthy habits, and positive mindset go a long way."
+      ]
+    },
+    {
+      "tag": "search",
+      "patterns": ["Search", "Look this up", "Find info on", "Google", "Can you search for", "Search about"],
+      "responses": ["Searching that for you... 🔍", "Let me find that!", "Here's what I found:"]
+    },
+    {
+      "tag": "help",
+      "patterns": ["Help", "Can you assist me?", "I need help", "Support"],
+      "responses": [
+        "I'm here to help! What do you need assistance with?",
+        "Just ask away, and I'll do my best to assist you! 😊"
+      ]
+    },
+    {
+      "tag": "howareyou",
+      "patterns": ["How are you?", "How's it going?", "What's up bot?", "How do you feel?"],
+      "responses": [
+        "I'm doing great! Thanks for asking 😊",
+        "Feeling chatty! How can I help you today?",
+        "Always happy to talk with you!"
+      ]
+    },
+    {
+      "tag": "default",
+      "patterns": [],
+      "responses": [
+        "I'm not sure I understood that, but I'm learning every day! Try rephrasing 😊",
+        "Interesting! Could you say that in a different way?",
+        "Hmm… I don't know how to respond to that yet, but I'm here to help!"
+      ]
+    }
+  ]
+}
