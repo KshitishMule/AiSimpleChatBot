@@ -86,6 +86,6 @@ Edit
 pip install -r requirements.txt
 🙌 Contributing
 Contributions are welcome! If you have suggestions for improvements, feel free to fork the repo and open a pull request.
-
-Your Regards
-Kshitish Mule, Dheeraj Malviya
+Yours Regards
+Kshitish Mule
+Dheeraj Malviya
