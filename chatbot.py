@@ -81,7 +81,7 @@ else:
     model.save_weights("model.weights.h5")
 
 def serpapi_search(query):
-    api_key = "d6117df890bf6f528f7ef6f56ce622a74497fa73ac7f67251c3d32fdb3df8ac1"
+    api_key = "YourApiKey"
     url = f"https://serpapi.com/search.json?q={query}&api_key={api_key}&hl=en&gl=us"
     try:
         response = requests.get(url)
