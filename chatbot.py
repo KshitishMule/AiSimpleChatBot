@@ -67,12 +67,11 @@ model = keras.Sequential([
 ])
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Delete old weights file if dimensions mismatch
 if os.path.exists("model.weights.h5"):
     try:
         model.load_weights("model.weights.h5")
-    except Exception as e:
-        print("Weight loading failed due to shape mismatch. Re-training...")
+    except Exception:
+        print("Weight loading failed. Re-training...")
         os.remove("model.weights.h5")
         model.fit(training, output, epochs=1200, batch_size=8, verbose=1)
         model.save_weights("model.weights.h5")
@@ -81,20 +80,29 @@ else:
     model.save_weights("model.weights.h5")
 
 def serpapi_search(query):
-    api_key = "YourApiKey"
+    api_key = "Your API KEY"
     url = f"https://serpapi.com/search.json?q={query}&api_key={api_key}&hl=en&gl=us"
     try:
         response = requests.get(url)
         data = response.json()
-
-        if "answer_box" in data and "answer" in data["answer_box"]:
-            return data["answer_box"]["answer"]
-        elif "organic_results" in data and len(data["organic_results"]) > 0:
-            return data["organic_results"][0].get("snippet", "No snippet found.")
+        if "answer_box" in data:
+            ab = data["answer_box"]
+            if "answer" in ab:
+                return ab["answer"]
+            elif "snippet" in ab:
+                return ab["snippet"]
+            elif "highlighted_words" in ab:
+                return ", ".join(ab["highlighted_words"])
+        if "organic_results" in data and len(data["organic_results"]) > 0:
+            result = data["organic_results"][0]
+            snippet = result.get("snippet", "")
+            title = result.get("title", "")
+            link = result.get("link", "")
+            return f"{title}:\n{snippet}\n\n🔗 {link}" if snippet else "No snippet found."
         else:
             return "Hmm... couldn't find anything interesting for that. Try another one!"
-    except:
-        return "Oops! Trouble reaching search results. Try again in a moment."
+    except Exception as e:
+        return f"Oops! Error occurred: {str(e)}"
 
 def bag_of_words(s, words):
     bag = [0] * len(words)
@@ -107,10 +115,6 @@ def bag_of_words(s, words):
     return np.array(bag)
 
 def get_response(msg):
-    if msg.lower().startswith("search"):
-        query = msg[6:].strip()
-        return serpapi_search(query)
-
     results = model.predict(np.array([bag_of_words(msg, words)]), verbose=0)[0]
     results_index = np.argmax(results)
     confidence = results[results_index]
@@ -118,7 +122,7 @@ def get_response(msg):
     if confidence > 0.7:
         tag = labels[results_index]
     else:
-        tag = "default"
+        return serpapi_search(msg)
 
     if tag == "time":
         return f"🕒 It's currently {datetime.datetime.now().strftime('%H:%M:%S')}!"
@@ -132,7 +136,7 @@ def get_response(msg):
 # GUI Setup
 window = tk.Tk()
 window.title("💬 AI ChatBot Companion")
-window.geometry("420x620")
+window.geometry("600x700")
 window.configure(bg="#ffffff")
 window.resizable(False, False)
 
@@ -143,7 +147,7 @@ Label(header, text="Hi there! 👋 Ready to chat?", bg="#0d47a1", fg="white", fo
 chat_frame = Frame(window, bg="#ffffff")
 chat_frame.pack(fill=tk.BOTH, expand=True)
 
-chat_canvas = tk.Canvas(chat_frame, bg="#ffffff", bd=0, highlightthickness=0)
+chat_canvas = Canvas(chat_frame, bg="#ffffff", bd=0, highlightthickness=0)
 scrollbar = Scrollbar(chat_frame, orient="vertical", command=chat_canvas.yview)
 chat_canvas.configure(yscrollcommand=scrollbar.set)
 
@@ -170,36 +174,40 @@ def send(event=None):
     user_input = user_entry.get().strip()
     if not user_input:
         return
-
     add_message("You", user_input, "user")
     user_entry.delete(0, tk.END)
 
-    window.after(100, lambda: add_bot_response(user_input))
+    placeholder = add_message("Bot", "Typing...", "bot")
+    window.after(500, lambda: add_bot_response(user_input, placeholder))
 
-def add_bot_response(user_input):
+def add_bot_response(user_input, typing_label):
     response = get_response(user_input)
-    add_message("Bot", response, "bot")
-
-def add_message(sender, msg, msg_type):
-    frame = Frame(chat_log, bg="#ffffff", pady=5)
-
-    if msg_type == "user":
-        bubble = Label(frame, text=msg, bg="#DCF8C6", fg="#000", wraplength=300, justify="right", font=("Segoe UI", 11), padx=10, pady=6)
-        bubble.pack(anchor="e", padx=10)
-    else:
-        bubble = Label(frame, text=msg, bg="#F1F0F0", fg="#000", wraplength=300, justify="left", font=("Segoe UI", 11), padx=10, pady=6)
-        bubble.pack(anchor="w", padx=10)
-
-    frame.pack(fill=tk.X, anchor="w", padx=10)
+    typing_label.config(text=response)
     chat_canvas.update_idletasks()
     chat_canvas.yview_moveto(1.0)
 
+def add_message(sender, msg, msg_type):
+    frame = Frame(chat_log, bg="#ffffff", pady=5)
+    timestamp = datetime.datetime.now().strftime("%H:%M")
+
+    bubble = Label(frame, text=f"{msg}\n🕒 {timestamp}",
+                   bg="#DCF8C6" if msg_type == "user" else "#F1F0F0",
+                   fg="#000", wraplength=550,
+                   justify="right" if msg_type == "user" else "left",
+                   font=("Segoe UI", 10), padx=10, pady=6)
+
+    bubble.pack(anchor="e" if msg_type == "user" else "w", padx=10, fill="x")
+    frame.pack(fill=tk.X, anchor="w", padx=10)
+    chat_canvas.update_idletasks()
+    chat_canvas.yview_moveto(1.0)
+    return bubble
+
 user_entry.bind("<Return>", send)
 
-send_btn = tk.Button(input_frame, text="➤", font=("Segoe UI", 14), bg="#0d47a1", fg="white", command=send)
+send_btn = tk.Button(input_frame, text="➡", font=("Segoe UI", 14), bg="#0d47a1", fg="white", command=send)
 send_btn.pack(side=tk.RIGHT, padx=(10, 0), ipadx=10, ipady=4)
 
-add_message("Bot", "🤖 Hello! Ask me anything or type 'search ...' to explore the web!", "bot")
+add_message("Bot", "🧠 Hello! Ask me anything — and I'll find the answer, even on the web!", "bot")
 user_entry.focus()
 
 window.mainloop()
